@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery
+//= require bootstrap/dist/js/bootstrap
 //= require twilio-video
 //= require rails-ujs
 //= require turbolinks

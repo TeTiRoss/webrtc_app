@@ -3,9 +3,11 @@
 }
 
 #local-media-ctr > video {
-  margin: 2px;
+  margin: 5px;
+  border-radius: 5px;
 }
 
 #remote-media-div > video {
-  margin: 2px;
+  margin: 5px;
+  border-radius: 5px;
 }

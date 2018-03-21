@@ -19,11 +19,16 @@ $( document ).ready(function() {
     userAudio = false;
   });
 
+  var localMediaContainer;
+  var localMediaTrack;
+
   $('#camera-preview').click(function() {
     if (userVideo == true) {
       Twilio.Video.createLocalVideoTrack().then(track => {
-        var localMediaContainer = document.getElementById('local-media-ctr');
+        localMediaContainer = document.getElementById('local-media-ctr');
         localMediaContainer.appendChild(track.attach());
+
+        localMediaTrack = track;
       });
     } else {
       alert('No camera found')
@@ -37,9 +42,23 @@ $( document ).ready(function() {
   };
 
   $("#connect").click(function() {
-    var token = $('#token').val();
+    var username = $('#username').val();
 
-    Twilio.Video.connect(token, { audio: userAudio, video: userVideo }).then(function(room) {
+    var roomName = $('#room-name').val();
+
+    var token;
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/token',
+      data: { identity: username },
+      success: function( data ) {
+        token = data.token;
+      },
+      async: false
+    });
+
+    Twilio.Video.connect(token, { audio: userAudio, video: userVideo, name: roomName }).then(function(room) {
       console.log('Successfully joined a Room: ', room);
 
       const localParticipant = room.localParticipant;

@@ -1,13 +1,24 @@
-<input id='token' type='text' name'Token'>
+<div class="row">
+  <div class="col-md-2">
+    <input id='username' type='text' class='form-control' placeholder="Username">
+  </div>
+  <div class="col-md-2">
+    <input id='room-name' type='text' class='form-control' placeholder="Room">
+  </div>
+  <div class="col-md-4">
+    <button id='connect' class='btn btn-default btn-success'>Connect</button>
 
-<button id='connect'>Connect</button>
+    <button id='disconnect-btn' class='btn btn-default btn-danger'>Disconnect</button>
 
-<button id='disconnect-btn'>Disconnect</button>
+    <button id='camera-preview' class='btn btn-default btn-info'>Camera preview</button>
+  </div>
+  <div class="col-md-4"></div>
+</div>
 
-<button id='camera-preview'>Camera preview</button>
+<div class="row">
+  <div id='local-media-ctr'></div>
+</div>
 
-<h3>Local Media:</h3>
-<div id='local-media-ctr'></div>
-
-<h3>Remote Media:</h3>
-<div id='remote-media-div'></div>
+<div class="row">
+  <div id='remote-media-div'></div>
+</div>
