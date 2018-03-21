@@ -1,0 +1,11 @@
+#local-media-ctr, #remote-media-div {
+  margin-top: 5px;
+}
+
+#local-media-ctr > video {
+  margin: 2px;
+}
+
+#remote-media-div > video {
+  margin: 2px;
+}
