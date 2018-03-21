@@ -1,52 +1,13 @@
 $( document ).ready(function() {
-  navigator.getMedia = (navigator.getUserMedia ||
-                        navigator.webkitGetUserMedia ||
-                        navigator.mozGetUserMedia ||
-                        navigator.msGetUserMedia);
-
-  var userVideo;
-  var userAudio;
-
-  navigator.getMedia({video: true}, function() {
-    userVideo = true;
-  }, function() {
-    userVideo = false;
+  Twilio.Video.createLocalVideoTrack().then(track => {
+    localMediaContainer = document.getElementById('local-media-ctr');
+    localMediaContainer.appendChild(track.attach());
   });
 
-  navigator.getMedia({audio: true}, function() {
-    userAudio = true;
-  }, function() {
-    userAudio = false;
-  });
-
-  var localMediaContainer;
-  var localMediaTrack;
-
-  $('#camera-preview').click(function() {
-    if (userVideo == true) {
-      Twilio.Video.createLocalVideoTrack().then(track => {
-        localMediaContainer = document.getElementById('local-media-ctr');
-        localMediaContainer.appendChild(track.attach());
-
-        localMediaTrack = track;
-      });
-    } else {
-      alert('No camera found')
-    };
-  });
-
-  function addParticipantRemoteTrack (participant) {
-    participant.on('trackAdded', track => {
-      document.getElementById('remote-media-div').appendChild(track.attach());
-    });
-  };
-
-  $("#connect").click(function() {
-    var username = $('#username').val();
-
-    var roomName = $('#room-name').val();
-
+  $("#connect-btn").click(function() {
     var token;
+    var username = $('#username').val();
+    var roomName = $('#room-name').val();
 
     $.ajax({
       type: 'POST',
@@ -58,12 +19,16 @@ $( document ).ready(function() {
       async: false
     });
 
-    Twilio.Video.connect(token, { audio: userAudio, video: userVideo, name: roomName }).then(function(room) {
+    Twilio.Video.connect(token, { audio: true, video: true, name: roomName }).then(function(room) {
       console.log('Successfully joined a Room: ', room);
 
-      const localParticipant = room.localParticipant;
+      $('#connect-btn').hide();
+      $('#disconnect-btn').show();
 
+      const localParticipant = room.localParticipant;
       console.log('Connected to the Room as LocalParticipant "%s"', localParticipant.identity);
+
+      // Display remote Participants video/audio
 
       room.participants.forEach(participant => {
         console.log('Participant "%s" is connected to the Room', participant.identity);
@@ -72,8 +37,12 @@ $( document ).ready(function() {
           document.getElementById('remote-media-div').appendChild(track.attach());
         });
 
-        addParticipantRemoteTrack(participant);
+        participant.on('trackAdded', track => {
+          document.getElementById('remote-media-div').appendChild(track.attach());
+        });
       });
+
+      // Remote Participant connected to the room
 
       room.once('participantConnected', participant => {
         console.log('Participant "%s" has connected to the Room', participant.identity);
@@ -86,27 +55,51 @@ $( document ).ready(function() {
           document.getElementById('remote-media-div').appendChild(track.attach());
         });
 
-        addParticipantRemoteTrack(participant);
+        participant.on('trackAdded', track => {
+          document.getElementById('remote-media-div').appendChild(track.attach());
+        });
       })
 
+      // Remote Participant disconnected from room
+
       room.on('participantDisconnected', participant => {
+        participant.tracks.forEach(track => {
+          var attachedElements = track.detach();
+          attachedElements.forEach(element => element.remove());
+        });
+
         console.log('Participant "%s" has disconnected from Room', participant.identity);
       });
 
+
+      // Local Participant disconnected from room
+
+      $('#disconnect-btn').click(function() {
+        room.disconnect();
+
+        $(this).hide();
+        $('#connect-btn').show();
+      });
+
       room.on('disconnected', room => {
-        // Detach the local media elements
         room.localParticipant.tracks.forEach(track => {
           var attachedElements = track.detach();
           attachedElements.forEach(element => element.remove());
         });
-      });
 
-      $('#disconnect-btn').click(function() {
-        room.disconnect();
+        room.participants.forEach(participant => {
+          participant.tracks.forEach(track => {
+            var attachedElements = track.detach();
+            attachedElements.forEach(element => element.remove());
+          });
+        });
+
+        console.log('Disconnected from the Room "%s"', room.name);
       });
 
     }, function(error) {
       console.error('Unable to connect to Room: ' +  error.message);
+      alert('Unable to connect to room. Probably some issues with access to your microfon or camera.')
     });
   });
 });

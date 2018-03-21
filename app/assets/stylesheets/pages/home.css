@@ -11,3 +11,7 @@
   margin: 5px;
   border-radius: 5px;
 }
+
+#disconnect-btn {
+  display: none;
+}
