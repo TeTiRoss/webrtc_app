@@ -1,22 +1,24 @@
 <div class="row">
   <div class="col-md-2">
-    <input id='username' type='text' class='form-control' placeholder="Username">
+    <div id='local-media-ctr'></div>
   </div>
-  <div class="col-md-2">
-    <input id='room-name' type='text' class='form-control' placeholder="Room">
-  </div>
+
+  <div class="col-md-2"></div>
+
   <div class="col-md-4">
-    <button id='connect-btn' class='btn btn-default btn-success'>Connect</button>
+    <div class="input-group mb-3">
+      <input id='username' type="text" class="form-control" placeholder="Username">
+      <input id='room-name' type="text" class="form-control" placeholder="Room">
+      <div class="input-group-append">
+        <button id='connect-btn' class='btn btn-default btn-success'>Connect</button>
+        <button id='disconnect-btn' class='btn btn-default btn-danger'>Disconnect</button>
+      </div>
+    </div>
 
-    <button id='disconnect-btn' class='btn btn-default btn-danger'>Disconnect</button>
+    <div id='remote-media-div'></div>
   </div>
-  <div class="col-md-4"></div>
-</div>
 
-<div class="row">
-  <div id='local-media-ctr'></div>
-</div>
+  <div class="col-md-1"></div>
 
-<div class="row">
-  <div id='remote-media-div'></div>
+  <div id='info-board' class="col-md-3"></div>
 </div>

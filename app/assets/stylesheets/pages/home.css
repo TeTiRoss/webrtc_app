@@ -1,15 +1,14 @@
-#local-media-ctr, #remote-media-div {
-  margin-top: 5px;
-}
-
-#local-media-ctr > video {
-  margin: 5px;
-  border-radius: 5px;
-}
-
 #remote-media-div > video {
-  margin: 5px;
   border-radius: 5px;
+  border-right: 2px solid transparent;
+  width: 50%;
+  height: auto;
+}
+
+video {
+  border-radius: 5px;
+  width: 100%;
+  height: auto;
 }
 
 #disconnect-btn {

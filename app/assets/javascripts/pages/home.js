@@ -21,7 +21,10 @@ $( document ).ready(function() {
 
     Twilio.Video.connect(token, { audio: true, video: true, name: roomName }).then(function(room) {
       console.log('Successfully joined a Room: ', room);
+      $("#info-board").prepend("<p class='text-secondary'>Successfully joined the room <b>" + room.name + "</b></p>");
 
+      $('#username').prop( "disabled", true );
+      $('#room-name').prop( "disabled", true );
       $('#connect-btn').hide();
       $('#disconnect-btn').show();
 
@@ -32,6 +35,7 @@ $( document ).ready(function() {
 
       room.participants.forEach(participant => {
         console.log('Participant "%s" is connected to the Room', participant.identity);
+        $("#info-board").prepend("<p class='text-secondary'><b>" + participant.identity + "</b> is connected to the room</p>");
 
         participant.tracks.forEach(track => {
           document.getElementById('remote-media-div').appendChild(track.attach());
@@ -44,12 +48,9 @@ $( document ).ready(function() {
 
       // Remote Participant connected to the room
 
-      room.once('participantConnected', participant => {
-        console.log('Participant "%s" has connected to the Room', participant.identity);
-      });
-
       room.on('participantConnected', function(participant) {
         console.log('A remote Participant connected: ', participant);
+        $("#info-board").prepend("<p class='text-secondary'><b>" + participant.identity + "</b> has connected to the room</p>");
 
         participant.tracks.forEach(track => {
           document.getElementById('remote-media-div').appendChild(track.attach());
@@ -69,6 +70,7 @@ $( document ).ready(function() {
         });
 
         console.log('Participant "%s" has disconnected from Room', participant.identity);
+        $("#info-board").prepend("<p class='text-secondary'><b>" + participant.identity + "</b> has disconnected from the room</p>");
       });
 
 
@@ -76,9 +78,6 @@ $( document ).ready(function() {
 
       $('#disconnect-btn').click(function() {
         room.disconnect();
-
-        $(this).hide();
-        $('#connect-btn').show();
       });
 
       room.on('disconnected', room => {
@@ -94,12 +93,18 @@ $( document ).ready(function() {
           });
         });
 
+        $('#disconnect-btn').hide();
+        $('#connect-btn').show();
+        $('#username').prop( "disabled", false );
+        $('#room-name').prop( "disabled", false );
+
         console.log('Disconnected from the Room "%s"', room.name);
+        $("#info-board").prepend("<p class='text-secondary'>Disconnected from the room <b>" + room.name + "</b></p>");
       });
 
     }, function(error) {
       console.error('Unable to connect to Room: ' +  error.message);
-      alert('Unable to connect to room. Probably some issues with access to your microfon or camera.')
+      alert('Unable to connect to room. If input fields are filled, then there is probably some issues with access to your mic or camera.')
     });
   });
 });
