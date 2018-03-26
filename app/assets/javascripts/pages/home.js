@@ -104,7 +104,7 @@ $( document ).ready(function() {
 
     }, function(error) {
       console.error('Unable to connect to Room: ' +  error.message);
-      alert('Unable to connect to room. If input fields are filled, then there is probably some issues with access to your mic or camera.')
+      alert('Unable to connect to the room. If Username is filled, then there is probably some problems with access to your mic or camera.')
     });
   });
 });
