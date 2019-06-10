@@ -9,5 +9,6 @@
   },
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
-  }
+  },
+  "version": "6.9.0"
 }
