@@ -10,5 +10,8 @@
   "devDependencies": {
     "webpack-dev-server": "2.11.2"
   },
-  "version": "6.9.0"
+  "engines": {
+    "node" : "8.16.0"
+  },
+  "version": "6.4.1"
 }
